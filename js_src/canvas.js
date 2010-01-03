@@ -68,7 +68,9 @@
 		stroke_cv.width = params.width;	
 		stroke_cv.height = params.height;
 		
-		stroke_ctx.clearRect(0, 0, params.width, params.height);
+//		stroke_ctx.clearRect(0, 0, params.width, params.height);
+		
+		var stroke_ctx = ctx;
 		
 		if (border_top) {
 			stroke_ctx.fillStyle = params.top_color;
@@ -93,11 +95,11 @@
 		}
 		
 		// start drawing two circles to create border arc
-		ctx.save();
+		stroke_ctx.save();
 		stroke_ctx.beginPath();
 		stroke_ctx.arc(radius, radius, radius, 0, Math.PI * 2, true);
 		stroke_ctx.fill();
-		ctx.restore();
+		stroke_ctx.restore();
 		
 		
 		// change composite operation so the next circle will be extracted from the previous one
@@ -117,7 +119,7 @@
 		stroke_ctx.clearRect(radius, border_top, radius, cv.height);
 		stroke_ctx.clearRect(border_left, radius, cv.width, cv.height);
 		
-		ctx.drawImage(stroke_cv, 0, 0);
+//		ctx.drawImage(stroke_cv, 0, 0);
 	}
 	
 	/**
@@ -160,6 +162,7 @@
 			offset_y = 0;
 		
 		ctx.save();
+		ctx.globalCompositeOperation = 'destination-over';
 		ctx.fillStyle = params.color;
 		if (!params.use_shape) {
 			ctx.fillRect(0, 0, radius, radius);
@@ -184,13 +187,13 @@
 		ctx.fillStyle = params.color;
 		ctx.arc(radius, radius, radius, 0, Math.PI * 2, true);
 		ctx.fill();
-		ctx.restore();
 		
 		if (params.use_shape) {
 			ctx.fillStyle = params.color;
 			ctx.fillRect(radius, 0, cv.width, cv.height);
 			ctx.fillRect(0, radius, cv.width, cv.height);
 		}
+		ctx.restore();
 	}
 	
 	return {
@@ -220,8 +223,8 @@
 			
 			prepare(params);
 			rotate(params);
-			drawBackground(params);
 			drawStroke(params);
+			drawBackground(params);
 			return (return_type == 2) ? cv : cv.toDataURL();
 		},
 		
