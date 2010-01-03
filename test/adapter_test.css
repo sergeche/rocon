@@ -1,0 +1,65 @@
+body {
+	padding:10px;
+	margin:0;
+	background:#fff;
+}
+
+#reference {
+	-moz-border-radius-topleft: 50px;
+	-moz-border-radius-topright: 10px;
+	-moz-border-radius-bottomright: 20px;
+	-moz-border-radius-bottomleft: 10px;
+	
+	-webkit-border-radius: 50px;
+	-webkit-border-top-left-radius: 50px;
+	-webkit-border-top-right-radius: 10px;
+	-webkit-border-bottom-right-radius: 20px;
+	-webkit-border-bottom-left-radius: 10px;
+	left:25%;
+}
+
+.sample {
+	position:absolute;
+	width:20%;
+	height:200px;
+	top:10px;
+	border-top: 5px solid #f00;
+	border-left: 2px solid #0f0;
+	border-right: 10px solid #00f;
+	border-bottom: 1px solid #fc0;
+	background:#eee;
+}
+
+#rocon div{
+	position:absolute;
+	overflow:hidden;
+	background-repeat:no-repeat;
+}
+
+#tl {
+	width:50px;
+	height:50px;
+	top:-5px;
+	left:-2px;
+}
+
+#tr {
+	width:10px;
+	height:10px;
+	top:-5px;
+	right:-10px;
+}
+
+#bl {
+	width:10px;
+	height:10px;
+	bottom:-1px;
+	left:-2px;
+}
+
+#br {
+	width:20px;
+	height:20px;
+	bottom:-1px;
+	right:-10px;
+}
