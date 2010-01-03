@@ -329,27 +329,28 @@
 			if (!css_class) {
 				// image is not yet created
 				css_class = addToCache(key);
-				var css_rules = 'height:' + cparams.height + 'px;';
+				var css_rules = [];
+				css_rules.push('height:' + cparams.height + 'px;');
 				
 				if (adapter.returnType() != 2)
-					css_rules += 'background-image:url(' + adapter.draw(cparams) + ');';
+					css_rules.push('background-image:url(' + adapter.draw(cparams) + ');');
 				
 				
 				if (needExtraWidth(params, corner_type)) {
-					css_rules += 'width:100%;' +
+					css_rules.push('width:100%;' +
 							'padding-left:' + (cparams.real_left + all_params[op_corner].left) + 'px;' +
 							'clip:rect(auto,auto,auto,' + params.radius[ type_pos[op_corner] ] + 'px);' +
-							'background-position:top right;';
+							'background-position:top right;');
 				} else {
-					css_rules += 'width:' + cparams.width + 'px;';
+					css_rules.push('width:' + cparams.width + 'px;');
 				}
 						
 				var offset_top = -(params.shape ? Math.max(cparams.height, cparams.radius) : cparams.top);
 				
-				css_rules += ( corner_type.charAt(0) == 't' ? 'top:' : 'bottom:' ) + cparams.offset_y + 'px;';
-				css_rules += ( corner_type.charAt(1) == 'l' ? 'left:' : 'right:' ) + cparams.offset_x + 'px;';
+				css_rules.push( ( corner_type.charAt(0) == 't' ? 'top:' : 'bottom:' ) + cparams.offset_y + 'px;' );
+				css_rules.push( ( corner_type.charAt(1) == 'l' ? 'left:' : 'right:' ) + cparams.offset_x + 'px;' );
 				
-				addRule('.' + css_class, css_rules);
+				addRule('.' + css_class, css_rules.join(''));
 			}
 			
 			cleanUp(elem, css_class);
@@ -501,7 +502,7 @@
 		run: function() {
 			// first, we need to cache all required CSS properies
 			// to get rid of nasty Opera bug
-//			console.profile();
+			console.profile();
 //			console.time('get_style');
 			
 //			var styles = [];
@@ -510,7 +511,7 @@
 //			});
 			
 //			console.timeEnd('get_style');
-			
+			document.body.style.display = 'none';
 			console.time('create_corner');
 			// then, draw and add corners
 			walkArray(queue, function(i, n){
@@ -521,8 +522,9 @@
 			console.time('apply_css');
 			applyCSS();
 			console.timeEnd('apply_css');
+			document.body.style.display = '';
 			
-//			console.profileEnd();
+			console.profileEnd();
 			
 		},
 		

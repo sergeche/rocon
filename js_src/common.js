@@ -469,13 +469,13 @@ function applyCSS() {
 		document.getElementsByTagName('head')[0].appendChild(style);
 		
 		var sheet = style.sheet;
-		document.body.style.display = 'none';
+//		document.body.style.display = 'none';
 		
 		for (var j = 0; j < css_rules_cache.length; j++) {
 			sheet.insertRule(css_rules_cache[j], j);
 		}
 		
-		document.body.style.display = '';
+//		document.body.style.display = '';
 		
 		
 //		style.title = 'rocon';
