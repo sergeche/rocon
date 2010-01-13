@@ -499,31 +499,16 @@
 		 * Add corners to enqueued elements
 		 */
 		run: function() {
-			// first, we need to cache all required CSS properies
-			// to get rid of nasty Opera bug
-//			console.profile();
-//			console.time('get_style');
-			
-//			var styles = [];
-//			walkArray(queue, function(i, n){
-//				styles[i] = getStyle(n[1], css_props);
-//			});
-			
-//			console.timeEnd('get_style');
-			
-			console.time('create_corner');
-			// then, draw and add corners
+			var start = (new Date).getTime();
 			walkArray(queue, function(i, n){
 				drawCorners(n[0], n[1], n[2]);
 			});
-			console.timeEnd('create_corner');
 			
-			console.time('apply_css');
+			var stop1 = (new Date).getTime();
 			applyCSS();
-			console.timeEnd('apply_css');
+			var stop2 = (new Date).getTime();
 			
-//			console.profileEnd();
-			
+			alert('Draw: ' + (stop1 - start) + ' ms, CSS: ' + (stop2 - stop1) + ' ms');
 		},
 		
 		/**

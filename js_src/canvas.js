@@ -9,23 +9,21 @@
 	
 	var composite_op = 'destination-out',
 	
-		/** Canvas where all images are drawn */
-		cv = createElement('canvas'),
+		/** @type {Element} Canvas where all images are drawn */
+		cv,
+		/** @type {Element} Canvas for stroke */
+		stroke_cv,
+		
 		/** @type {CanvasRenderingContext2D} Drawing context */
-		ctx = cv.getContext('2d'),
+		ctx,
+		/** @type {CanvasRenderingContext2D} Stroke drawing context */
+		stroke_ctx,
 		
 		/** Type of returnerd object of <code>draw()</code> method (1 — image string, 2 — canvas element) */
 		return_type = 1;
 		
 		// debug only
 //		document.body.appendChild(cv);
-	
-	cv.width = 10;	
-	cv.height = 10;	
-	
-	var stroke_cv = createElement('canvas'),
-		/** @type {CanvasRenderingContext2D} Drawing context */
-		stroke_ctx = stroke_cv.getContext('2d');
 	
 	/**
 	 * Prepare canvas for drawing: removes old paintings, restores original
@@ -194,6 +192,16 @@
 	}
 	
 	return {
+		init: function() {
+			cv = createElement('canvas');
+			ctx = cv.getContext('2d');
+			cv.width = 10;	
+			cv.height = 10;
+			
+			stroke_cv = createElement('canvas');
+			stroke_ctx = stroke_cv.getContext('2d');
+		},
+		
 		/**
 		 * Draw rounded corner
 		 * 
