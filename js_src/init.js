@@ -21,15 +21,15 @@ addDomReady(function(){
 if (browser.msie) {
 	worker.setAdapter(vml);
 	addDomReady(function(){
-		corners_ss.cssText += css_text;
-		css_text = '';
-		addRule = corners_ss.addRule;
+//		corners_ss.cssText += css_text;
+//		css_text = '';
+//		addRule = corners_ss.addRule;
 	});
 } else {
 	worker.setAdapter(canvas);
 	//canvas.returnType(2);
 	if (browser.safari) {
-		canvas.returnType(2);
+		canvas.returnType(1);
 	//	worker.nativeProperties(
 	//		'-webkit-border-top-left-radius', 
 	//		'-webkit-border-top-right-radius', 

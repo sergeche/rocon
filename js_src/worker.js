@@ -79,7 +79,7 @@
 	 * @return {Boolean}
 	 */
 	function needExtraWidth(params, type) {
-		return params.shape && (type || 'tl').charAt(1) == 'r';
+		return params.shape && (type || 'tl').charAt(1) == 'l';
 	}
 	
 	/**
@@ -277,7 +277,7 @@
 		// gather all params for all corners
 		var all_params = {}, css_map, elem, style;
 		
-		for (var corner_type in corners) {
+		for (var corner_type in corners) if (corners.hasOwnProperty(corner_type)) {
 			css_map = corner_type_map[corner_type];
 			/** @type {HTMLElement} */
 			elem = corners[corner_type];
@@ -318,6 +318,8 @@
 			var op_corner = opposite_corners[corner_type],
 				key = cacheKey(cparams);
 			
+			cparams.opposite = all_params[op_corner];
+			
 			if (needExtraWidth(params, corner_type)) {
 				//add extra properties for cache key
 				key += '--' + (cparams.left + all_params[op_corner].left) + 
@@ -331,23 +333,26 @@
 				css_class = addToCache(key);
 				var css_rules = 'height:' + cparams.height + 'px;';
 				
-				if (adapter.returnType() != 2)
+				if (adapter.returnType() != 2) // adapter draws image in data:url format
 					css_rules += 'background-image:url(' + adapter.draw(cparams) + ');';
 				
-				
-				if (needExtraWidth(params, corner_type)) {
-					css_rules += 'width:100%;' +
-							'padding-left:' + (cparams.real_left + all_params[op_corner].left) + 'px;' +
-							'clip:rect(auto,auto,auto,' + params.radius[ type_pos[op_corner] ] + 'px);' +
-							'background-position:top right;';
-				} else {
-					css_rules += 'width:' + cparams.width + 'px;';
-				}
-						
 				var offset_top = -(params.shape ? Math.max(cparams.height, cparams.radius) : cparams.top);
 				
 				css_rules += ( corner_type.charAt(0) == 't' ? 'top:' : 'bottom:' ) + cparams.offset_y + 'px;';
 				css_rules += ( corner_type.charAt(1) == 'l' ? 'left:' : 'right:' ) + cparams.offset_x + 'px;';
+				
+				if (needExtraWidth(params, corner_type)) {
+					css_rules += 'width:100%;' +
+							'background-position:' + (cparams.radius - cparams.left - cparams.opposite.left) + 'px 0px;' +
+							'left:' + (-cparams.radius + cparams.opposite.left) + 'px;';
+//					css_rules += 'width:100%;' +
+//							'padding-left:' + (cparams.real_left + all_params[op_corner].left) + 'px;' +
+//							'clip:rect(auto,auto,auto,' + params.radius[ type_pos[op_corner] ] + 'px);' +
+//							'background-position:top right;';
+				} else {
+					css_rules += 'width:' + cparams.width + 'px;';
+				}
+						
 				
 				addRule('.' + css_class, css_rules);
 			}
@@ -357,10 +362,10 @@
 			if (adapter.returnType() == 2) {
 				var corner = adapter.draw(cparams);
 				if (typeof(corner) == 'string') {
-					elem.innerHTML = adapter.draw(cparams);
+					elem.innerHTML = corner;
 				} else {
 					elem.innerHTML = '';
-					elem.appendChild(adapter.draw(cparams));
+					elem.appendChild(corner);
 				}
 			}
 		}
@@ -514,7 +519,7 @@
 			applyCSS();
 			var stop2 = (new Date).getTime();
 			
-			alert('Draw: ' + (stop1 - start) + ' ms, CSS: ' + (stop2 - stop1) + ' ms');
+//			alert('Draw: ' + (stop1 - start) + ' ms, CSS: ' + (stop2 - stop1) + ' ms');
 		},
 		
 		/**

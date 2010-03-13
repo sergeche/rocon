@@ -288,7 +288,7 @@ function getStyle(elem, name) {
 		}
 		//Otherwise, try to use IE's method
 		else if (browser.msie) {
-			result[name_camel] = elem.currentStyle[name_camel];
+			result[n] = result[name_camel] = elem.currentStyle[name_camel];
 		}
 		// Or the W3C's method, if it exists
 		else if (document.defaultView && document.defaultView.getComputedStyle) {
@@ -403,7 +403,7 @@ var getBg = (function() {
 		}
 		
 		return bg;
-	}
+	};
 })();
 
 getBg.use_cache = true;
@@ -416,19 +416,9 @@ var css_rules_cache = [];
  * @param {String} selector CSS-селектор, для которого нужно добавить правила
  * @param {String} rules CSS-правила
  */
-var addRule = (function(){
-	
-	return function(selector, rules){
-		css_rules_cache[css_rules_cache.length] = selector + ' {' + rules + '}';
-	}
-	
-	
-	if (browser.msie)
-		return function(selector, rules){ css_text += selector + '{' + rules + '}'; }
-	else
-		return function(selector, rules){ corners_ss.insertRule(selector + ' {' + rules + '}', corners_ss.cssRules.length); }
-})();
-
+function addRule(selector, rule) {
+	css_rules_cache.push([selector, rule]);
+}
 
 /**
  * Создает новую таблицу стилей на странице, куда будут добавляться правила
@@ -441,22 +431,8 @@ function createStylesheet() {
 			corners_ss = document.createStyleSheet();
 		} else {
 			var style = createElement('style');
-			style.rel = 'rocon';
 			document.getElementsByTagName('head')[0].appendChild(style);
-			
-			/*
-			 * Просто получить самый последний стиль не получится: иногда стили
-			 * добавляются внутрь <body> (так делает счетчик Яндекса, например),
-			 * в этом случае мы не можем быть уверены, что только что 
-			 * добавленная таблица стилей — последняя. Поэтому пробегаетмся 
-			 * по всем таблицам в поисках нашей  
-			 */ 
-			walkArray(document.styleSheets, function(){
-				if (this.ownerNode.rel == 'rocon') {
-					corners_ss = this;
-					return false;
-				}
-			});
+			corners_ss = style.sheet;
 		}
 	}
 	
@@ -465,39 +441,23 @@ function createStylesheet() {
 
 function applyCSS() {
 	if (css_rules_cache.length) {
-		var style = createElement('style');
-		document.getElementsByTagName('head')[0].appendChild(style);
-		
-		var sheet = style.sheet;
-		document.body.style.display = 'none';
-		
-		for (var j = 0; j < css_rules_cache.length; j++) {
-			sheet.insertRule(css_rules_cache[j], j);
+		var sheet = createStylesheet();
+		if (sheet.addRule) {
+			// msie way
+			for (var j = 0; j < css_rules_cache.length; j++) {
+				var r = css_rules_cache[j];
+				sheet.addRule(r[0], r[1]);
+			}
+		} else {
+			// W3C way
+			for (var j = 0; j < css_rules_cache.length; j++) {
+				var r = css_rules_cache[j];
+				sheet.insertRule(r[0] + '{' + r[1] + '}', j);
+			}
 		}
 		
-		document.body.style.display = '';
-		
-		
-//		style.title = 'rocon';
-		
-		
-		
-//		console.dir(style);
-		
-//		var sheets = document.styleSheets;
-//		
-//		for (var i = sheets.length - 1; i >= 0; i--) {
-//			var sheet = sheets[i];
-//			if (sheet.title == 'rocon') {
-//				for (var j = 0; j < css_rules_cache.length; j++) {
-//					sheet.insertRule(css_rules_cache[j], j);
-//				}
-//				break;
-//			}
-//		}
-		
+		css_rules_cache.length = 0;
 	}
-	css_rules_cache = [];
 }
 
 /**
