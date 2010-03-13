@@ -342,9 +342,11 @@
 				css_rules += ( corner_type.charAt(1) == 'l' ? 'left:' : 'right:' ) + cparams.offset_x + 'px;';
 				
 				if (needExtraWidth(params, corner_type)) {
+					var size_delta = max(cparams.left + cparams.opposite.left - cparams.radius, 0);
 					css_rules += 'width:100%;' +
-							'background-position:' + (cparams.radius - cparams.left - cparams.opposite.left) + 'px 0px;' +
-							'left:' + (-cparams.radius + cparams.opposite.left) + 'px;';
+							'background-position:' + Math.max(0, cparams.radius - cparams.left - cparams.opposite.left) + 'px 0px;' +
+							'left:' + min(-cparams.radius + cparams.opposite.left - size_delta, cparams.offset_x) + 'px;' +
+							'padding-right:' + (size_delta + max(cparams.real_left - cparams.radius, 0)) + 'px';
 //					css_rules += 'width:100%;' +
 //							'padding-left:' + (cparams.real_left + all_params[op_corner].left) + 'px;' +
 //							'clip:rect(auto,auto,auto,' + params.radius[ type_pos[op_corner] ] + 'px);' +

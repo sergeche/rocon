@@ -168,7 +168,7 @@
 			if (params.type.charAt(1) == 'r')
 				params.offset += 'left: 0px;';
 			else if (params.use_shape) {
-				params.offset += 'left: ' + (params.radius - params.left - params.opposite.left) + 'px;';
+				params.offset += 'left: ' + Math.max(0, params.radius - params.left - params.opposite.left) + 'px;';
 			}
 				
 			
