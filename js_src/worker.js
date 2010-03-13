@@ -353,9 +353,15 @@
 			}
 			
 			cleanUp(elem, css_class);
+			
 			if (adapter.returnType() == 2) {
-				elem.innerHTML = '';
-				elem.appendChild(adapter.draw(cparams));
+				var corner = adapter.draw(cparams);
+				if (typeof(corner) == 'string') {
+					elem.innerHTML = adapter.draw(cparams);
+				} else {
+					elem.innerHTML = '';
+					elem.appendChild(adapter.draw(cparams));
+				}
 			}
 		}
 		
