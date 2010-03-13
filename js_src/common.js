@@ -357,7 +357,7 @@ var getBg = (function() {
 			} else { // цвет еще не найден
 				session_elems.push(elem);
 				c = getStyle(elem, 'background-color');
-				if (c != 'transparent')
+				if (c != 'transparent' && c != 'rgba(0, 0, 0, 0)')
 					return convertColorToHex(c);
 			}
 				

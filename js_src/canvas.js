@@ -181,6 +181,7 @@
 		ctx.beginPath();
 		ctx.fillStyle = params.color;
 		ctx.arc(radius, radius, radius, 0, Math.PI * 2, true);
+		ctx.closePath();
 		ctx.fill();
 		ctx.restore();
 		
